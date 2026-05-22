@@ -8,6 +8,7 @@ data:
   RETAIL_CATALOG_PERSISTENCE_PROVIDER: "mysql"
   RETAIL_CATALOG_PERSISTENCE_ENDPOINT: "catalog-mysql:3306"
   RETAIL_CATALOG_PERSISTENCE_DB_NAME: "catalogdb"
-  RETAIL_CATALOG_PERSISTENCE_USER: "catalog_user"
-  RETAIL_CATALOG_PERSISTENCE_PASSWORD: "catalogpassword101"
+  # RETAIL_CATALOG_PERSISTENCE_USER: "catalog_user"
+  # RETAIL_CATALOG_PERSISTENCE_PASSWORD: "catalogpassword101"
   RETAIL_CATALOG_PERSISTENCE_CONNECT_TIMEOUT: "5" 
+  # need to add DNS of mysql headless service here if we are using statefulset for mysql deployment
