@@ -10,6 +10,7 @@ metadata:
     app.kubernetes.io/component: service
 
 spec:
+  serviceAccountName: catalog-mysql-sa
   replicas: 2
   strategy:
     rollingUpdate:
@@ -36,8 +37,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: catalog-cm
-            - secretRef:
-                name: catalog-db
           securityContext:
             capabilities:
               drop:
@@ -66,3 +65,25 @@ spec:
             requests:
               memory: "128Mi"
               cpu: "100m"
+
+          volumeMounts:
+            - name: aws-secrets
+              mountPath: /mnt/aws-secrets
+              readOnly: true
+          command: ["/bin/bash", "-c"]
+          args:
+            - 
+             |
+              set -e
+              export RETAIL_CATALOG_PERSISTENCE_USER=$(cat /mnt/aws-secrets/MYSQL_USER)
+              export RETAIL_CATALOG_PERSISTENCE_PASSWORD=$(cat /mnt/aws-secrets/MYSQL_PASSWORD)
+              export MYSQL_ROOT_PASSWORD=$(cat /mnt/aws-secrets/MYSQL_ROOT_PASSWORD)
+              echo "Loaded secrets from AWS Secrets Manager. Starting Catalog Service..."
+              exec /app/main
+      volumes:
+        - name: aws-secrets
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: catalog-db-secrets 
