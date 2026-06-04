@@ -10,7 +10,6 @@ metadata:
     app.kubernetes.io/component: service
 
 spec:
-  serviceAccountName: catalog-mysql-sa
   replicas: 2
   strategy:
     rollingUpdate:
@@ -30,6 +29,7 @@ spec:
         app.kubernetes.io/instance: catalog
         app.kubernetes.io/owner: retail-store-sample
     spec:
+      serviceAccountName: catalog-mysql-sa
       securityContext:
         fsGroup: 1000
       containers:
@@ -68,16 +68,15 @@ spec:
 
           volumeMounts:
             - name: aws-secrets
-              mountPath: /mnt/aws-secrets
+              mountPath: /mnt/secrets-store
               readOnly: true
           command: ["/bin/bash", "-c"]
           args:
-            - 
-             |
+            - |
               set -e
-              export RETAIL_CATALOG_PERSISTENCE_USER=$(cat /mnt/aws-secrets/MYSQL_USER)
-              export RETAIL_CATALOG_PERSISTENCE_PASSWORD=$(cat /mnt/aws-secrets/MYSQL_PASSWORD)
-              export MYSQL_ROOT_PASSWORD=$(cat /mnt/aws-secrets/MYSQL_ROOT_PASSWORD)
+              export RETAIL_CATALOG_PERSISTENCE_USER=$(cat /mnt/secrets-store/MYSQL_USER)
+              export RETAIL_CATALOG_PERSISTENCE_PASSWORD=$(cat /mnt/secrets-store/MYSQL_PASSWORD)
+              export MYSQL_ROOT_PASSWORD=$(cat /mnt/secrets-store/MYSQL_ROOT_PASSWORD)
               echo "Loaded secrets from AWS Secrets Manager. Starting Catalog Service..."
               exec /app/main
       volumes:
