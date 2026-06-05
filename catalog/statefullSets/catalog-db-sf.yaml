@@ -54,11 +54,20 @@ spec:
               mountPath: /mnt/aws-secrets
               readOnly: true
       volumes:
-        - name: data
-          emptyDir: {}
+        # - name: data
+        #   emptyDir: {}
         - name: aws-secrets
           csi:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
               secretProviderClass: catalog-db-secrets
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: ebs-sc
+        resources:
+          requests:
+            storage: 10Gi
