@@ -22,7 +22,7 @@ spec:
   ingressClassName: alb 
   defaultBackend:
     service:
-      name: retail-store-service-clusterip
+      name: ui-np
       port:
         number: 80                  
       

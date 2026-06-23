@@ -37,13 +37,17 @@ spec:
           env:
             - name: MYSQL_DATABASE
               value: "catalogdb"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-db
+                  key: MYSQL_ROOT_PASSWORD
           command: ["/bin/bash", "-c"]
           args:
             - |
               set -e
-              export MYSQL_USER=$(cat /mnt/aws-secrets/MYSQL_USER)
-              export MYSQL_PASSWORD=$(cat /mnt/aws-secrets/MYSQL_PASSWORD)
-              export MYSQL_ROOT_PASSWORD=$(cat /mnt/aws-secrets/MYSQL_ROOT_PASSWORD)
+              export MYSQL_USER=$(cat /mnt/aws-secrets/username)
+              export MYSQL_PASSWORD=$(cat /mnt/aws-secrets/password)
               echo "Loaded secrets from AWS Secrets Manager. Starting MySQL..."
               exec docker-entrypoint.sh mysqld
 

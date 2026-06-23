@@ -50,6 +50,12 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-db
+                  key: MYSQL_ROOT_PASSWORD
           readinessProbe:
             httpGet:
               path: /health
@@ -74,9 +80,8 @@ spec:
           args:
             - |
               set -e
-              export RETAIL_CATALOG_PERSISTENCE_USER=$(cat /mnt/secrets-store/MYSQL_USER)
-              export RETAIL_CATALOG_PERSISTENCE_PASSWORD=$(cat /mnt/secrets-store/MYSQL_PASSWORD)
-              export MYSQL_ROOT_PASSWORD=$(cat /mnt/secrets-store/MYSQL_ROOT_PASSWORD)
+              export RETAIL_CATALOG_PERSISTENCE_USER=$(cat /mnt/secrets-store/username)
+              export RETAIL_CATALOG_PERSISTENCE_PASSWORD=$(cat /mnt/secrets-store/password)
               echo "Loaded secrets from AWS Secrets Manager. Starting Catalog Service..."
               exec /app/main
       volumes:

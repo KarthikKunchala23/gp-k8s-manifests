@@ -12,4 +12,4 @@ data:
   # RETAIL_CATALOG_PERSISTENCE_PASSWORD: "catalogpassword101"
   RETAIL_CATALOG_PERSISTENCE_CONNECT_TIMEOUT: "5" 
   # need to add DNS of mysql headless service here if we are using statefulset for mysql deployment
-  RETAIL_CATALOG_PERSISTENCE_ENDPOINT: "catalog-mysql-database.cz66w0ygo6po.ap-south-1.rds.amazonaws.com:3306"
+  RETAIL_CATALOG_PERSISTENCE_ENDPOINT: "catalog-rds-instance.cz66w0ygo6po.ap-south-1.rds.amazonaws.com:3306"

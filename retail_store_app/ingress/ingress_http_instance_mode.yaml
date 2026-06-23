@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: instance
-    alb.ingress.kubernetes.io/load-balancer-name: retail-store-ingress-http-instance-mode
+    alb.ingress.kubernetes.io/load-balancer-name: retail-store-http-instance-mode
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port
     alb.ingress.kubernetes.io/healthcheck-path: /actuator/health/readiness
@@ -19,6 +19,6 @@ spec:
   ingressClassName: alb
   defaultBackend:
     service:
-      name: retail-store-service-np
+      name: ui-np
       port:
         number: 80
