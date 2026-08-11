@@ -1,0 +1,27 @@
+# Source: retail-store-sample-cart-chart/templates/configmap.yaml
+{{- if .Values.configMap.create }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "carts.configMapName" . }}
+data:
+  RETAIL_CART_PERSISTENCE_PROVIDER: {{ .Values.app.persistence.provider }}
+
+  {{- if -eq "dynamodb" .Values.app.persistence.provider }}
+
+  RETAIL_CART_PERSISTENCE_DYNAMODB_TABLE_NAME: {{ .Values.app.persistence.dynamodb.tableName | quote }}
+
+  {{- if -eq "aws".Values.app.persistence.dynamodb.mode }}
+
+  RETAIL_CART_PERSISTENCE_DYNAMODB_CREATE_TABLE: {{ .Values.app.persistence.dynamodb.createTable | quote }}
+
+  {{- else if -eq "local".Values.app.persistence.dynamodb.mode }}
+
+  RETAIL_CART_PERSISTENCE_DYNAMODB_CREATE_TABLE: {{ .Values.app.persistence.dynamodb.createTable | quote }}
+
+  RETAIL_CART_PERSISTENCE_DYNAMODB_ENDPOINT: http://{{ include "carts.dynamodb.fullname" ."}}:{{ .Values.dynamodb.service.port }}
+  {{- end }}
+
+  {{- end }}
+  
+{{- end }}

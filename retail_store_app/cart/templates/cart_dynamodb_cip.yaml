@@ -1,0 +1,16 @@
+# Source: retail-store-sample-cart-chart/templates/dynamodb-service.yaml
+{{- if and (eq "dynamodb" .Values.app.persistence.provider) .Values.dynamodb.create) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "carts.dynamodb.fullname" . }}-svc"
+  labels: {{- include "carts.dynamodb.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.dynamodb.service.type }}
+  ports:
+    - port: {{ .Values.dynamodb.service.port }}
+      targetPort: dynamodb
+      protocol: TCP
+      name: tcp-dynamodb
+  selector: {{- include "carts.dynamodb.selectorLabels" . | nindent 4 }}
+{{- end }}

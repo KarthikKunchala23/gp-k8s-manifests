@@ -1,0 +1,14 @@
+# Source: retail-store-sample-cart-chart/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "carts.fullname" . }}-svc"
+  labels: {{- include "carts.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector: {{- include "carts.selectorLabels" . | nindent 4 }}

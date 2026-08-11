@@ -1,0 +1,103 @@
+---
+replicaCount: 1
+
+image:
+  repository: public.ecr.aws/aws-containers/retail-store-sample-cart
+  tag:
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: carts
+  annotations: {}
+
+podAnnotations: {}
+
+configMap:
+  create: true
+  name:
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+resources:
+  limits:
+    memory: 512Mi
+  requests:
+    cpu: 256m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+topologySpreadConstraints: []
+
+metrics:
+  enabled: true
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/actuator/prometheus"
+
+service:
+  type: ClusterIP
+  port: 80
+
+app:
+  persistence:
+    provider: dynamodb
+    dynamodb:
+      tableName: Items
+      createTable: false
+      mode: aws
+
+dynamodb:
+  create: false
+
+  image:
+    repository: public.ecr.aws/aws-dynamodb-local/aws-dynamodb-local
+    tag: "1.25.1"
+    pullPolicy: IfNotPresent
+
+  service:
+    port: 8000
+    type: ClusterIP
+
+  podAnnotations: {}
+
+  nodeSelector: {}
+
+  affinity: {}
+
+  tolerations: []
+
+opentelemetry:
+  enabled: false
+  instrumentation: ""
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 2
+  maxUnavailable: 1
