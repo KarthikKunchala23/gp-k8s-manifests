@@ -16,6 +16,8 @@ metadata:
     alb.ingress.kubernetes.io/success-codes: '200'
     alb.ingress.kubernetes.io/healthy-threshold-count: '2'
     alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
+    # External-Dns
+    #external-dns.alpha.kubernetes.io/hostname: retailstore.cloudllearning.com
 spec:
   ingressClassName: alb
   defaultBackend:

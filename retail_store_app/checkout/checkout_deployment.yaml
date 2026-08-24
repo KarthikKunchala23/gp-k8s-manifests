@@ -33,7 +33,29 @@ spec:
         app.kubernetes.io/instance: checkout
         app.kubernetes.io/component: service
         app.kubernetes.io/owner: retail-store-sample
+        
     spec:
+      topologySpreadConstraints:
+        # Spread across nodes (within same AZ)
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: checkout
+              app.kubernetes.io/component: service
+              app.kubernetes.io/instance: checkout
+        
+        # Spread across availability zones
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone          
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: checkout
+              app.kubernetes.io/component: service
+              app.kubernetes.io/instance: checkout
+
       serviceAccountName: checkout
       securityContext:
         fsGroup: 1000
